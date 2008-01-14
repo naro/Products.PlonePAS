@@ -50,6 +50,8 @@ from Products.PlonePAS.tools.memberdata import MemberDataTool
 from Products.PlonePAS.MigrationCheck import canAutoMigrate
 from plone.session.plugins.session import manage_addSessionPlugin
 
+from borg.localrole.workspace import manage_addWorkspaceLocalRoleManager
+
 try:
     import Products.LDAPMultiPlugins
     CAN_LDAP = True
@@ -178,9 +180,9 @@ def setupPlugins(portal, out):
 
     found = uf.objectIds(['Local Roles Manager'])
     if not found:
-        plone_pas.manage_addLocalRolesManager('local_roles')
-        print >> out, "Added Group Aware Role Manager."
-        activatePluginInterfaces(portal, 'local_roles', out)
+        manage_addWorkspaceLocalRoleManager(uf, 'borg_localroles')
+        print >> out, "Added Adaptation-based Local Role Manager."
+        activatePluginInterfaces(portal, 'borg_localroles', out)
 
     found = uf.objectIds(['Group Manager'])
     if not found:
