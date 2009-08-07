@@ -363,7 +363,10 @@ class MembershipTool(BaseTool):
         ### don't get it from getMemberById
         member = self.getMemberById(memberId)
         if member:
-            return member.getProperty('fullname')
+            if len(member.getProperty('fullname')) > 0:
+                return member.getProperty('fullname')
+            else:
+                return memberId
         return ""
 
 
