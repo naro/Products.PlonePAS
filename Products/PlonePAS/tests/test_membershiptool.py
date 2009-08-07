@@ -392,6 +392,13 @@ class TestMembershipTool(base.TestCase, WarningInterceptor):
                                   properties={'fullname': 'Second user'})
         info = self.membership.getMemberInfo('user2')
         self.assertEqual(info['fullname'], 'Second user')
+        
+    def testGetFullName(self):
+        self.membership.addMember('user2', 'secret', ['Member'], [],
+                                  properties={'fullname': 'Second user'})
+        fullname = self.membership.getFullname('user2')
+        self.assertEqual(fullname, 'Second user')
+        
 
     def testGetCandidateLocalRolesIncludesLocalRolesOnObjectForManager(self):
         self.folder._addRole('my_test_role')
