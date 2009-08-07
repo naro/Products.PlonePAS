@@ -354,7 +354,7 @@ class MembershipTool(BaseTool):
         return memberinfo
     
     security.declarePublic('getFullname')
-    def getFullname(self):
+    def getFullname(self, memberId):
         """
         Return fullname of a member
         """
