@@ -354,17 +354,24 @@ class MembershipTool(BaseTool):
         return memberinfo
     
     security.declarePublic('getFullname')
-    def getFullname(self, memberId):
+    def getFullname(self, memberId=None):
         """
         Return fullname of a member
         """
         ### PLIP #9305
         ### TODO: get fullname from loopup mechanism
         ### don't get it from getMemberById
-        member = self.getMemberById(memberId)
-        if member:
-            if len(member.getProperty('fullname')) > 0:
-                return member.getProperty('fullname')
+        if not memberId:
+            member = self.getAuthenticatedMember()
+        else:
+            member = self.getMemberById(memberId)
+            
+        if member is None:
+            return ""
+        else:
+            fullname = member.getProperty('fullname')
+            if len(fullname) > 0:
+                return fullname
             else:
                 return memberId
         return ""
