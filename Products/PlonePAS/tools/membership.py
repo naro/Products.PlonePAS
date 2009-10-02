@@ -472,7 +472,7 @@ class MembershipTool(BaseTool):
         if not safe_id:
             safe_id = self.getAuthenticatedMember().getId()
 
-        if portrait and portrait.filename:
+        if portrait:
             scaled, mimetype = scale_image(portrait)
             portrait = Image(id=safe_id, file=scaled, title='')
             membertool = getToolByName(self, 'portal_memberdata')
