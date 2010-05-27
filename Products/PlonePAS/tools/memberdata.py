@@ -19,7 +19,6 @@ from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
 from Products.PlonePAS.interfaces.capabilities import IDeleteCapability, IPasswordSetCapability
 from Products.PlonePAS.interfaces.capabilities import IGroupCapability, IAssignRoleCapability
 from Products.PlonePAS.interfaces.capabilities import IManageCapabilities
-from Products.PlonePAS.utils import getCharset
 from AccessControl.requestmethod import postonly
 
 _marker = object()
@@ -282,20 +281,11 @@ class MemberData(BaseMemberData):
             if not sheets:
                 return BaseMemberData.getProperty(self, id, default)
 
-        charset = getCharset(self)
-
         # If we made this far, we found a PAS and some property sheets.
         for sheet in sheets:
             if sheet.hasProperty(id):
                 # Return the first one that has the property.
                 value = sheet.getProperty(id)
-                if isinstance(value, unicode):
-                    # XXX Temporarily work around the fact that
-                    # property sheets blindly store and return
-                    # unicode. This is sub-optimal and should be
-                    # dealed with at the property sheets level by
-                    # using Zope's converters.
-                    return value.encode(charset)
                 return value
 
         # Couldn't find the property in the property sheets. Try to

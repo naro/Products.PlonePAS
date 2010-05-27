@@ -14,7 +14,6 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 
 from Products.PlonePAS.interfaces.plugins import ILocalRolesPlugin
 from Products.PlonePAS.interfaces.propertysheets import IMutablePropertySheet
-from Products.PlonePAS.utils import getCharset
 from Products.PlonePAS.odict import OrderedDict
 
 manage_addPloneUserFactoryForm = DTMLFile('../zmi/PloneUserFactoryForm',
@@ -217,14 +216,6 @@ class PloneUser(PropertiedUser):
         for sheet in self.getOrderedPropertySheets():
             if sheet.hasProperty(id):
                 value=sheet.getProperty(id)
-                if isinstance(value, unicode):
-                    # XXX Temporarily work around the fact that
-                    # property sheets blindly store and return
-                    # unicode. This is sub-optimal and should be
-                    # dealed with at the property sheets level by
-                    # using Zope's converters.
-                    charset = getCharset(self)
-                    return value.encode(charset)
                 return value
 
         return default

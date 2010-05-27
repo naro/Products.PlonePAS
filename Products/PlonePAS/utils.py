@@ -14,15 +14,6 @@ def unique(iterable):
         d[i] = None
     return d.keys()
 
-def getCharset(context):
-    """Returns the site default charset, or utf-8.
-    """
-    properties = getToolByName(context, "portal_properties")
-    site_properties = getattr(properties, 'site_properties', None)
-    if site_properties is not None:
-        return site_properties.getProperty('default_charset')
-    return 'utf-8'
-
 def cleanId(id):
     """'url_quote' turns strange chars into '%xx', which is not a valid char
     for ObjectManager. Here we encode '%' into '-' (and '-' into '--' as escaping).
