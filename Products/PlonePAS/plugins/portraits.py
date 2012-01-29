@@ -13,6 +13,26 @@ from Products.CMFCore.permissions import ManagePortal
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PlonePAS.interfaces.plugins import IPortraitManagementPlugin
 from Products.PlonePAS.interfaces.capabilities import IChangePortraitCapability
+from OFS.Image import Image
+from Products.PlonePAS.utils import scale_image
+
+
+class VirtualImage(object):
+
+    meta_type = 'VirtualImage'
+
+    def __init__(self, id, width=None, height=None, title='', url=''):
+        self.id = id
+        self.url = url
+        self.width = width
+        self.title = title
+        self.height = height
+
+    def getId(self):
+        return self.id
+
+    def absolute_url(self):
+        return self.url
 
 
 def manage_addZODBPortraitProvider(self, id, title='',
@@ -61,10 +81,18 @@ class ZODBPortraitProvider(BasePlugin):
         
     def setPortrait(self, portrait, member_id):
         """ store portrait for particular member.
-            portrait must be OFS.Image.Image """
+            portrait must be file-like object"""
         if member_id in self.portraits:
             self.portraits._delObject(member_id)
-        self.portraits._setObject(id= member_id, object=portrait)
+        
+        # ignore VirtualImage portraits
+        if isinstance(portrait, VirtualImage):
+            return False
+
+        if portrait and portrait.filename:
+            scaled, mimetype = scale_image(portrait)
+            portrait = Image(id=safe_id, file=scaled, title='')
+            self.portraits._setObject(id= member_id, object=portrait)
         return True
         
     def deletePortrait(self, member_id):
@@ -140,6 +168,10 @@ class PortalMemberdataPortraitProvider(BasePlugin):
     def setPortrait(self, portrait, member_id):
         """ store portrait for particular member.
             portrait must be OFS.Image.Image """
+        # ignore VirtualImage portraits
+        if isinstance(portrait, VirtualImage):
+            return False
+
         mds = getattr(getToolByName(self, 'portal_memberdata'), 'portraits', None)
         if mds is not None:
             if member_id in mds:

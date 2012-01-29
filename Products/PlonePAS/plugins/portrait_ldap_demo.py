@@ -10,7 +10,7 @@ from Products.Five import BrowserView
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PlonePAS.interfaces.plugins import IPortraitManagementPlugin
 from Products.PlonePAS.interfaces.capabilities import IChangePortraitCapability
-from Products.PlonePAS.plugins.gravatar_portrait import VirtualImage
+from Products.PlonePAS.plugins.portraits import VirtualImage
 
 def manage_addLDAPPortraitProvider(self, id, title='',
                                           RESPONSE=None, **kw):

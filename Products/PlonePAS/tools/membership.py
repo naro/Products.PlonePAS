@@ -8,7 +8,6 @@ from zope.interface import implements
 from DateTime import DateTime
 from App.class_init import InitializeClass
 from App.special_dtml import DTMLFile
-from OFS.Image import Image
 
 from AccessControl import ClassSecurityInfo
 from AccessControl import getSecurityManager
@@ -34,7 +33,6 @@ from Products.PlonePAS.events import UserInitialLoginInEvent
 from Products.PlonePAS.events import UserLoggedOutEvent
 from Products.PlonePAS.interfaces import membership
 from Products.PlonePAS.utils import cleanId
-from Products.PlonePAS.utils import scale_image
 
 default_portrait = 'defaultUser.png'
 logger = logging.getLogger('PlonePAS')
@@ -486,11 +484,8 @@ class MembershipTool(BaseTool):
         if not safe_id:
             safe_id = self.getAuthenticatedMember().getId()
 
-        if portrait and portrait.filename:
-            scaled, mimetype = scale_image(portrait)
-            portrait = Image(id=safe_id, file=scaled, title='')
-            membertool = getToolByName(self, 'portal_memberdata')
-            membertool._setPortrait(portrait, safe_id)
+        membertool = getToolByName(self, 'portal_memberdata')
+        membertool._setPortrait(portrait, safe_id)
 
 
     security.declareProtected(ManageUsers, 'listMembers')
